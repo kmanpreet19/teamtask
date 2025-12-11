@@ -1,11 +1,16 @@
 import { NextFunction, Request, Response } from 'express'
-import { ZodSchema } from 'zod'
+import { z } from 'zod'
 
-export const validate = (schema: ZodSchema<any>) => (req: Request, res: Response, next: NextFunction) => {
+export const validate = (schema: z.ZodSchema<any>) => (req: Request, res: Response, next: NextFunction) => {
+
   try {
-    schema.parse({ body: req.body, params: req.params, query: req.query })
-    return next()
+    schema.parse({
+      body: req.body,
+      params: req.params,
+      query: req.query
+    });
+    next();
   } catch (err: any) {
-    return res.status(400).json({ success: false, error: err.errors ?? err.message })
+    next(err);  // pass it to error middleware
   }
-}
+};

@@ -7,8 +7,11 @@ export function signJwt(payload: object, expiresIn = config.accessTokenExp) {
 
 export function verifyJwt(token: string) {
   try {
-    return jwt.verify(token, config.jwtAccessSecret)
-  } catch (err) {
-    return null
+    console.log("VERIFYING with secret:", process.env.JWT_ACCESS_SECRET);
+    return jwt.verify(token, process.env.JWT_ACCESS_SECRET as string);
+  } catch (err: any) {
+    console.log("JWT ERROR:", err.message);
+    return null;
   }
 }
+
